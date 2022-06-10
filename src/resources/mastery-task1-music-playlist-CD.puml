@@ -1,1 +1,94 @@
-PARTICIPANTS: use this file for creating the class diagram in mastery task 01
+@startuml
+AddSongToPlaylistActivity *-- Logger
+AddSongToPlaylistActivity *-- PlaylistDao
+AddSongToPlaylistActivity *-- AlbumTrackDao
+
+CreatePlaylistActivity *-- Logger
+CreatePlaylistActivity *-- PlaylistDao
+
+GetPlaylistActivity *-- Logger
+GetPlaylistActivity *-- PlaylistDao
+
+GetPlaylistSongsActivity *-- Logger
+GetPlaylistSongsActivity *-- PlaylistDao
+
+UpdatePlaylistActivity *-- Logger
+UpdatePlaylistActivity *-- PlaylistDao
+
+Playlist *-- AlbumTrack
+
+AlbumTrackNotFoundException --|> RuntimeException
+
+class AddSongToPlaylistActivity implements RequestHandler {
+    - Logger log
+    - PlaylistDao playlistDao
+    - AlbumTrackDao albumTrackDao
+    + handleRequest(AddSongToPlaylistRequest, Context) : AddSongToPlaylistResult
+}
+
+class CreatePlaylistActivity implements RequestHandler {
+    - Logger log
+    - PlaylistDao playlistDao
+    + handleRequest(CreatePlaylistRequest, Context) : CreatePlaylistResult
+}
+
+class GetPlaylistActivity implements RequestHandler {
+    - Logger log
+    - PlaylistDao playlistDao
+    + handleRequest(GetPlaylistRequest, Context) : GetPlaylistResult
+}
+
+class GetPlaylistSongsActivity implements RequestHandler {
+    - Logger log
+    - PlaylistDao playlistDao
+    + handleRequest(GetPlaylistSongsRequest, Context) : GetPlaylistSongsResult
+}
+
+class UpdatePlaylistActivity implements RequestHandler {
+    - Logger log
+    - PlaylistDao playlistDao
+    + handleRequest(UpdatePlaylistRequest, Context) : UpdatePlaylistResult
+}
+
+newpage
+
+class AlbumTrack {
+    @DynamoDBHashKey asin : String
+    @DynamoDBRangeKey trackNumber : Integer
+    albumName : String
+    songTitle : String
+}
+
+class Playlist {
+    @DynamoDBHashKey id : String
+    name : String
+    customerId : String
+    songCount : Integer
+    tags : Set<String>
+    songList : List<AlbumTrack>
+}
+
+class AlbumTrackDao {
+    dynamoDbMapper : DynamoDBMapper
+}
+
+class PlaylistDao {
+    dynamoDbMapper : DynamoDBMapper
+    + getPlaylist(id : String) : Playlist
+}
+
+newpage
+
+class AlbumTrackNotFoundException extends RuntimeException {
+    {static} - long serialVersionUID
+}
+
+class InvalidAttributeValueException extends RuntimeException {
+    {static} - long serialVersionUID
+}
+
+class PlaylistNotFoundException extends RuntimeException {
+    {static} - long serialVersionUID
+}
+
+@enduml

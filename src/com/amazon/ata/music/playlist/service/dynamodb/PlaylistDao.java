@@ -35,4 +35,14 @@ public class PlaylistDao {
 
         return playlist;
     }
+
+    /**
+     * Save playlist to DataBase
+     * @param playlist The playlist to be saved to database
+     * @return The saved playlist
+     */
+    public Playlist savePlaylist(Playlist playlist) {
+        dynamoDbMapper.save(playlist);
+        return playlist;
+    }
 }
