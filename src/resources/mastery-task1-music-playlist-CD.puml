@@ -2,23 +2,6 @@
 AddSongToPlaylistActivity *-- Logger
 AddSongToPlaylistActivity *-- PlaylistDao
 AddSongToPlaylistActivity *-- AlbumTrackDao
-
-CreatePlaylistActivity *-- Logger
-CreatePlaylistActivity *-- PlaylistDao
-
-GetPlaylistActivity *-- Logger
-GetPlaylistActivity *-- PlaylistDao
-
-GetPlaylistSongsActivity *-- Logger
-GetPlaylistSongsActivity *-- PlaylistDao
-
-UpdatePlaylistActivity *-- Logger
-UpdatePlaylistActivity *-- PlaylistDao
-
-Playlist *-- AlbumTrack
-
-AlbumTrackNotFoundException --|> RuntimeException
-
 class AddSongToPlaylistActivity implements RequestHandler {
     - Logger log
     - PlaylistDao playlistDao
@@ -31,24 +14,35 @@ class CreatePlaylistActivity implements RequestHandler {
     - PlaylistDao playlistDao
     + handleRequest(CreatePlaylistRequest, Context) : CreatePlaylistResult
 }
+CreatePlaylistActivity *-- Logger
+CreatePlaylistActivity *-- PlaylistDao
+
+newpage
 
 class GetPlaylistActivity implements RequestHandler {
     - Logger log
     - PlaylistDao playlistDao
     + handleRequest(GetPlaylistRequest, Context) : GetPlaylistResult
 }
+GetPlaylistActivity *-- Logger
+GetPlaylistActivity *-- PlaylistDao
 
 class GetPlaylistSongsActivity implements RequestHandler {
     - Logger log
     - PlaylistDao playlistDao
     + handleRequest(GetPlaylistSongsRequest, Context) : GetPlaylistSongsResult
 }
+GetPlaylistSongsActivity *-- Logger
+GetPlaylistSongsActivity *-- PlaylistDao
 
 class UpdatePlaylistActivity implements RequestHandler {
     - Logger log
     - PlaylistDao playlistDao
     + handleRequest(UpdatePlaylistRequest, Context) : UpdatePlaylistResult
 }
+UpdatePlaylistActivity *-- Logger
+UpdatePlaylistActivity *-- PlaylistDao
+
 
 newpage
 
@@ -67,6 +61,9 @@ class Playlist {
     tags : Set<String>
     songList : List<AlbumTrack>
 }
+Playlist *-- AlbumTrack
+AlbumTrackNotFoundException --|> RuntimeException
+
 
 class AlbumTrackDao {
     dynamoDbMapper : DynamoDBMapper
@@ -78,17 +75,27 @@ class PlaylistDao {
 }
 
 newpage
+'RuntimeException <|-- InvalidAttributeException
+class InvalidAttributeException extends RuntimeException {
+    {static} - long serialVersionUID
+}
 
 class AlbumTrackNotFoundException extends RuntimeException {
     {static} - long serialVersionUID
 }
 
-class InvalidAttributeValueException extends RuntimeException {
+class InvalidAttributeValueException {
     {static} - long serialVersionUID
 }
+InvalidAttributeException <|-- InvalidAttributeValueException
 
 class PlaylistNotFoundException extends RuntimeException {
     {static} - long serialVersionUID
 }
+
+class InvalidAttributeChangeException {
+    {static} - long serialVersionUID
+}
+InvalidAttributeException <|-- InvalidAttributeChangeException
 
 @enduml
