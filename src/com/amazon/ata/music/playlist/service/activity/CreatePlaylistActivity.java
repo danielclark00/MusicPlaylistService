@@ -17,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
 /**
@@ -55,15 +56,15 @@ public class CreatePlaylistActivity implements RequestHandler<CreatePlaylistRequ
     public CreatePlaylistResult handleRequest(final CreatePlaylistRequest createPlaylistRequest, Context context) {
         log.info("Received CreatePlaylistRequest {}", createPlaylistRequest);
         Set<String> tags = null;
-//        if (createPlaylistRequest.getTags().size() == 0) {
-//            createPlaylistRequest.setTags(null);
-//        }
+
         if (createPlaylistRequest.getTags() != null && createPlaylistRequest.getTags().size() > 0) {
             tags = new HashSet<>(createPlaylistRequest.getTags());
         }
-        if (!(MusicPlaylistServiceUtils.isValidString(createPlaylistRequest.getCustomerId()) ||
-            MusicPlaylistServiceUtils.isValidString(createPlaylistRequest.getName()))) {
-            throw new InvalidAttributeValueException("Invalid Name or CustomerId.");
+        if (!MusicPlaylistServiceUtils.isValidString(createPlaylistRequest.getCustomerId())) {
+            throw new InvalidAttributeValueException("Invalid CustomerId.");
+        }
+        if (!MusicPlaylistServiceUtils.isValidString(createPlaylistRequest.getName())) {
+            throw new InvalidAttributeValueException("Invalid Name.");
         }
 
 
@@ -73,7 +74,7 @@ public class CreatePlaylistActivity implements RequestHandler<CreatePlaylistRequ
         playlist.setName(createPlaylistRequest.getName());
         playlist.setSongCount(0);
         playlist.setTags(tags);
-        playlist.setSongList(new ArrayList<>());
+        playlist.setSongList(new LinkedList<>());
 
         playlistDao.savePlaylist(playlist);
 
