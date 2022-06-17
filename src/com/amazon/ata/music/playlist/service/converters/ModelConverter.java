@@ -45,12 +45,7 @@ public class ModelConverter {
         LinkedList<SongModel> songModelList = new LinkedList<>();
 
         for (AlbumTrack song : songs) {
-            SongModel songModel = toSongModel(song);
-            songModel.setAsin(song.getAsin());
-            songModel.setTrackNumber(song.getTrackNumber());
-            songModel.setAlbum(song.getAlbumName());
-            songModel.setTitle(song.getSongTitle());
-            songModelList.add(songModel);
+            songModelList.add(toSongModel(song));
         }
 
         return songModelList;

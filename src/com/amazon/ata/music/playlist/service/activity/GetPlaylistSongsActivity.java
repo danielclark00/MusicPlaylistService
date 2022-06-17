@@ -64,9 +64,10 @@ public class GetPlaylistSongsActivity implements RequestHandler<GetPlaylistSongs
 
         LinkedList<AlbumTrack> songs = playlist.getSongList();
         SongOrder songOrder = getPlaylistSongsRequest.getOrder();
-        if (songOrder != null && songOrder == SongOrder.SHUFFLED) {
-
-        } else if (songOrder != null && songOrder == SongOrder.REVERSED) {
+        if (songOrder == null) { songOrder = SongOrder.DEFAULT; }
+        if (songOrder == SongOrder.SHUFFLED) {
+            Collections.shuffle(songs);
+        } else if (songOrder == SongOrder.REVERSED) {
             Collections.reverse(songs);
         }
 

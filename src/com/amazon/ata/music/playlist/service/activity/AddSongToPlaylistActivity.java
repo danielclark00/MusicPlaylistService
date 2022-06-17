@@ -64,7 +64,7 @@ public class AddSongToPlaylistActivity implements RequestHandler<AddSongToPlayli
         Playlist playlist;
         AlbumTrack albumTrack;
         ModelConverter modelConverter = new ModelConverter();
-        List<SongModel> songModelList = new ArrayList<>();
+        List<SongModel> songModelList;
 
         try {
             playlist = playlistDao.getPlaylist(addSongToPlaylistRequest.getId());
@@ -87,14 +87,7 @@ public class AddSongToPlaylistActivity implements RequestHandler<AddSongToPlayli
         playlist.setSongCount(playlist.getSongCount() + 1);
         playlist = playlistDao.savePlaylist(playlist);
 
-        for (AlbumTrack song : playlist.getSongList()) {
-            SongModel songModel = modelConverter.toSongModel(song);
-            songModel.setAsin(albumTrack.getAsin());
-            songModel.setTrackNumber(albumTrack.getTrackNumber());
-            songModel.setAlbum(albumTrack.getAlbumName());
-            songModel.setTitle(albumTrack.getSongTitle());
-            songModelList.add(songModel);
-        }
+        songModelList = modelConverter.toSongModelList(playlist.getSongList());
 
         return AddSongToPlaylistResult.builder()
                 .withSongList(songModelList)
