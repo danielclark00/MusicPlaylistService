@@ -41,8 +41,8 @@ public class ModelConverter {
                 .build();
     }
 
-    public LinkedList<SongModel> toSongModelList(LinkedList<AlbumTrack> songs) {
-        LinkedList<SongModel> songModelList = new LinkedList<>();
+    public List<SongModel> toSongModelList(List<AlbumTrack> songs) {
+        List<SongModel> songModelList = new ArrayList<>();
 
         for (AlbumTrack song : songs) {
             songModelList.add(toSongModel(song));

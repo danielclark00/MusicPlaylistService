@@ -18,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Implementation of the GetPlaylistSongsActivity for the MusicPlaylistService's GetPlaylistSongs API.
@@ -53,7 +54,7 @@ public class GetPlaylistSongsActivity implements RequestHandler<GetPlaylistSongs
         log.info("Received GetPlaylistSongsRequest {}", getPlaylistSongsRequest);
         Playlist playlist;
         ModelConverter modelConverter = new ModelConverter();
-        LinkedList<SongModel> songModelList;
+        List<SongModel> songModelList;
 
 
         try {
@@ -62,16 +63,16 @@ public class GetPlaylistSongsActivity implements RequestHandler<GetPlaylistSongs
             throw new PlaylistNotFoundException(e.getMessage());
         }
 
-        LinkedList<AlbumTrack> songs = playlist.getSongList();
+
         SongOrder songOrder = getPlaylistSongsRequest.getOrder();
         if (songOrder == null) { songOrder = SongOrder.DEFAULT; }
         if (songOrder == SongOrder.SHUFFLED) {
-            Collections.shuffle(songs);
+            Collections.shuffle(playlist.getSongList());
         } else if (songOrder == SongOrder.REVERSED) {
-            Collections.reverse(songs);
+            Collections.reverse(playlist.getSongList());
         }
 
-        songModelList = modelConverter.toSongModelList(songs);
+        songModelList = modelConverter.toSongModelList(playlist.getSongList());
 
         return GetPlaylistSongsResult.builder()
                 .withSongList(songModelList)

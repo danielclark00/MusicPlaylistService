@@ -19,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -78,13 +79,15 @@ public class AddSongToPlaylistActivity implements RequestHandler<AddSongToPlayli
             throw new AlbumTrackNotFoundException(e.getMessage());
         }
 
+        LinkedList<AlbumTrack> songList = (LinkedList<AlbumTrack>) playlist.getSongList();
         if (addSongToPlaylistRequest.isQueueNext()) {
-            playlist.getSongList().addFirst(albumTrack);
+            songList.addFirst(albumTrack);
         } else {
-            playlist.getSongList().addLast(albumTrack);
+            songList.addLast(albumTrack);
         }
 
         playlist.setSongCount(playlist.getSongCount() + 1);
+        playlist.setSongList(songList);
         playlist = playlistDao.savePlaylist(playlist);
 
         songModelList = modelConverter.toSongModelList(playlist.getSongList());

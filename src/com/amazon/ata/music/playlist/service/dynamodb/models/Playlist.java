@@ -21,7 +21,7 @@ public class Playlist {
     private String customerId;
     private Integer songCount;
     private Set<String> tags;
-    private LinkedList<AlbumTrack> songList;
+    private List<AlbumTrack> songList;
 
     @DynamoDBHashKey(attributeName = "id")
     public String getId() {
@@ -71,11 +71,11 @@ public class Playlist {
     // PARTICIPANTS: You do not need to modify the songList getters/setters or annotations
     @DynamoDBTypeConverted(converter = AlbumTrackLinkedListConverter.class)
     @DynamoDBAttribute(attributeName = "songList")
-    public LinkedList<AlbumTrack> getSongList() {
+    public List<AlbumTrack> getSongList() {
         return songList;
     }
 
-    public void setSongList(LinkedList<AlbumTrack> songList) {
+    public void setSongList(List<AlbumTrack> songList) {
         this.songList = songList;
     }
 }
