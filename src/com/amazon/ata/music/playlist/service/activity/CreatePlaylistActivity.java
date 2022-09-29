@@ -74,7 +74,7 @@ public class CreatePlaylistActivity implements RequestHandler<CreatePlaylistRequ
         playlist.setName(createPlaylistRequest.getName());
         playlist.setSongCount(0);
         playlist.setTags(tags);
-        playlist.setSongList(new LinkedList<>());
+        playlist.setSongList(new ArrayList<>());
 
         playlistDao.savePlaylist(playlist);
 
