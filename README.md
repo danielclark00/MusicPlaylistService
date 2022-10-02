@@ -1,4 +1,4 @@
-## Unit 3 Project Design Document
+## Music Playlist Service
 
 ### Background
 
